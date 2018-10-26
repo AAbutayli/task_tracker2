@@ -22,6 +22,18 @@ use Mix.Releases.Config,
 # when building in that environment, this combination of release
 # and environment configuration is called a profile
 
+get_secret = fn name ->
+  base = Path.expand("~/.config/task_tracker2")
+  File.mkdir_p!(base)
+  path = Path.join(base, name)
+  unless File.exists?(path) do
+    secret = Base.encode16(:crypto.strong_rand_bytes(32))
+    File.write!(path, secret)
+  end
+  String.trim(File.read!(path))
+end
+
+
 environment :dev do
   # If you are running Phoenix, you should make sure that
   # server: true is set and the code reloader is disabled,
@@ -31,13 +43,13 @@ environment :dev do
   # dev mode.
   set dev_mode: true
   set include_erts: false
-  set cookie: :"%$7*3O2YOwXmg@dLVW/LplAJ3WXZdC)46A2!Ej`QY$2s|j1KMC054p&)s:d6ZW3K"
+  set cookie: String.to_atom(get_secret.("dev_cookie"))
 end
 
 environment :prod do
   set include_erts: true
   set include_src: false
-  set cookie: :"=WIurj1!e(8[wesU7*J4[Uu^vJpdQvDR|6$Nh|jX>OAPr3x:7`u5qTiFwBmJWX7~"
+  set cookie: String.to_atom(get_secret.("prod_cookie"))
 end
 
 # You may define one or more releases in this file.
