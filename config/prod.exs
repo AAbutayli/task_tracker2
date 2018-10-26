@@ -98,5 +98,5 @@ secret_key_base: get_secret.("key_base");
 config :task_tracker2, TaskTracker2.Repo,
   username: "task_tracker2p2",
   password: get_secret.("db_pass"),
-  database: "task_tracker2_prod",
+  database: "task_tracker2p2_prod",
   pool_size: 15
