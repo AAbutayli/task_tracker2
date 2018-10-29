@@ -20,7 +20,8 @@ mix release --env=prod
 
 
 #echo "Stopping old copy of app, if any..."
-#_build/prod/rel/draw/bin/practice stop || true
+#_build/prod/rel/task_tracker2/bin/task_tracker2 stop || true
+
 
 echo "Starting app..."
 
