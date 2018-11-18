@@ -19,9 +19,12 @@
 
   <li>
     <strong>Duration:</strong>
-    <%= @task.duration %>
+      <%= @task.duration.hour %> hours <%= @task.duration.minute %> mins  
   </li>
-
+     <li>
+     <strong>Assigned to</strong>
+     <%= @task.user_id %> 
+   </li>
 </ul>
 
 <span><%= link "Edit", to: Routes.task_path(@conn, :edit, @task) %></span>

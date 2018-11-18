@@ -7,7 +7,6 @@ defmodule TaskTracker2.Tasks do
   alias TaskTracker2.Repo
 
   alias TaskTracker2.Tasks.Task
-
   @doc """
   Returns the list of tasks.
 

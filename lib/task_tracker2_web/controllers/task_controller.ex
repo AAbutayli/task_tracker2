@@ -11,7 +11,8 @@ defmodule TaskTracker2Web.TaskController do
 
   def new(conn, _params) do
     changeset = Tasks.change_task(%Task{})
-    render(conn, "new.html", changeset: changeset)
+    users = TaskTracker2.Users.list_users()
+    render(conn, "new.html", changeset: changeset , users: users)
   end
 
   def create(conn, %{"task" => task_params}) do
@@ -34,7 +35,8 @@ defmodule TaskTracker2Web.TaskController do
   def edit(conn, %{"id" => id}) do
     task = Tasks.get_task!(id)
     changeset = Tasks.change_task(task)
-    render(conn, "edit.html", task: task, changeset: changeset)
+    users= TaskTracker2.Users.list_users()
+    render(conn, "edit.html", task: task, changeset: changeset, users: users)
   end
 
   def update(conn, %{"id" => id, "task" => task_params}) do

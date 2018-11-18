@@ -8,7 +8,7 @@ defmodule TaskTracker2.Users.User do
     field :email, :string
     field :fname, :string
     field :lname, :string
-
+    has_many :task, TaskTracker2.Tasks.Task
     timestamps()
   end
 
