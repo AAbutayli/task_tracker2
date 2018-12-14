@@ -30,12 +30,12 @@ defmodule TaskTracker2Web.TimeblockController do
     render(conn, "show.html", timeblock: timeblock)
   end
 
-  def edit(conn, %{"id" => id}) do
-    timeblock = Timeblocks.get_timeblock!(id)
-    with {:ok, %Timeblock{} = timeblock} <- Timeblocks.update_timeblock(timeblock, timeblock_params) do
-      render(conn, "show.json", timeblock: timeblock)
-    end
-  end
+#  def edit(conn, %{"id" => id}) do
+ #   timeblock = Timeblocks.get_timeblock!(id)
+ #   with {:ok, %Timeblock{} = timeblock} <- Timeblocks.update_timeblock(timeblock, timeblock_params) do
+  #    render(conn, "show.json", timeblock: timeblock)
+   # end
+  #end
 
   def update(conn, %{"id" => id, "timeblock" => timeblock_params}) do
     timeblock = Timeblocks.get_timeblock!(id)
