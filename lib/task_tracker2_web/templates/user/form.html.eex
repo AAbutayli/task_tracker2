@@ -9,6 +9,18 @@
   <%= text_input f, :email %>
   <%= error_tag f, :email %>
 
+     <div class="form-group">
+    <%= label f, :password, class: "control-label" %>
+    <%= password_input f, :password, class: "form-control" %>
+    <%= error_tag f, :password %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :password_confirmation, class: "control-label" %>
+    <%= password_input f, :password_confirmation, class: "form-control" %>
+    <%= error_tag f, :password_confirmation %>
+  </div>
+
   <%= label f, :fname %>
   <%= text_input f, :fname %>
   <%= error_tag f, :fname %>

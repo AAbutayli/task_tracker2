@@ -1,8 +1,9 @@
 defmodule TaskTracker2Web.SessionController do
     use TaskTracker2Web, :controller
   
-    def create(conn, %{"email" => email}) do
-      user = TaskTracker2.Users.get_user_by_email(email)
+    def create(conn, %{"email" => email, "password" => pass }) do
+      IO.inspect({email, pass})
+      user = get_and_auth_user(email, pass)
       if user do
         conn
         |> put_session(:user_id, user.id)
@@ -15,6 +16,14 @@ defmodule TaskTracker2Web.SessionController do
       end
     end
   
+    # TODO: Move to user.ex
+  def get_and_auth_user(email, password) do
+    user = TaskTracker2.Users.get_user_by_email(email)
+    case Comeonin.Argon2.check_pass(user, password) do
+      {:ok, user} -> user
+      _else       -> nil
+    end
+  end
     def delete(conn, _params) do
       conn
       |> delete_session(:user_id)

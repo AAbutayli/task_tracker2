@@ -12,5 +12,6 @@
 alias TaskTracker2.Repo
 alias TaskTracker2.Users.User
 
-Repo.insert!(%User{email: "alice@example.com", fname: "alice", lname: "bob", admin: true})
-Repo.insert!(%User{email: "bob@example.com", fname: "bob", lname: "alice", admin: false})
+pwhash = Argon2.hash_pwd_salt("pass1")
+Repo.insert!(%User{email: "alice@example.com", fname: "alice", lname: "bob", admin: true, password_hash: pwhash})
+Repo.insert!(%User{email: "bob@example.com", fname: "bob", lname: "alice", admin: false, password_hash: pwhash})
