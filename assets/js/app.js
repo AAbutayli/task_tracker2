@@ -17,3 +17,84 @@ import "bootstrap";
 //
 // Local files can be imported directly using relative paths, for example:
 // import socket from "./socket"
+
+
+$(function() {
+  $('.delete-button').click((ev) => {
+    let task_id = $(ev.target).data('task-id');
+    let text = JSON.stringify({
+
+    });
+    $.ajax(`${timeblock_path}/${task_id}`, {
+      type: "DELETE",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: "",
+      success: (resp) => {
+        location.reload()
+      },
+    });
+  });
+});
+
+$(function() {
+  function update_timeblocks(task_id) {
+    $.ajax(`${timeblock_path}?task_id=${task_id}`, {
+      method: "get",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: "",
+      success: (resp) => {
+        location.reload()
+      },
+    });
+  }
+
+  $('#start-button').click((ev) => {
+    let task_id = $(ev.target).data('task-id');
+    let start_date = new Date();
+    let start_f = formatDate(start_date);
+    $('#start-button').prop('disabled', false);
+    $('#end-button').prop('disabled', false);
+    $('#end-button').click((ev) => {
+      let end_date = new Date();
+      let end_f = formatDate(end_date);
+      let text = JSON.stringify({
+        timeblock: {
+          start: start_f,
+          end: end_f,
+          task_id: task_id,
+        },
+      });
+      $.ajax(timeblock_path, {
+        method: "post",
+        dataType: "json",
+        contentType: "application/json; charset=UTF-8",
+        data: text,
+        success: (resp) => {
+          $('#start-button').prop('disabled', false);
+          $('#end-button').prop('disabled', true);
+          update_timeblocks(task_id);
+        },
+      });
+    });
+  });
+});
+
+
+function formatDate(d) {
+  var year = d.getFullYear();
+  var month = d.getMonth() + 1;
+  month = month < 10 ? '0'+month : month;
+  var date = d.getDate();
+  date = date < 10 ? '0'+date : date;
+  var full_date = year + '-' + month + '-' + date;
+  var hours = d.getHours();
+  hours = hours < 10 ? '0'+hours : hours;
+  var minutes = d.getMinutes();
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var seconds = d.getSeconds();
+  seconds = seconds < 10 ? '0'+seconds : seconds;
+  var full_time = hours + ':' + minutes + ':' + seconds;
+  return full_date + ' ' + full_time;
+}

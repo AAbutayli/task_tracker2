@@ -5,8 +5,11 @@ defmodule TaskTracker2.Tasks do
 
   import Ecto.Query, warn: false
   alias TaskTracker2.Repo
-
   alias TaskTracker2.Tasks.Task
+  alias TaskTracker2.Users
+  alias TaskTracker2.Users.User
+
+  alias TaskTracker2.Timeblocks
   @doc """
   Returns the list of tasks.
 
@@ -34,7 +37,27 @@ defmodule TaskTracker2.Tasks do
       ** (Ecto.NoResultsError)
 
   """
-  def get_task!(id), do: Repo.get!(Task, id)
+  def get_task!(id) do
+    Repo.one! from t in Task,
+    where: t.id == ^id,
+    preload: [:timeblock]
+  end 
+
+  def get_deligated_tasks(id) do
+    tasks = Repo.all(Task)
+    deligated_ids = Enum.map(Users.get_deligateds(id), fn u -> u.id end)
+    Enum.filter(tasks, fn t -> t.user_id in deligated_ids end)
+  end
+
+  def get_user_tasks(id) do
+    tasks = Repo.all(Task)
+    Enum.filter(tasks, fn t -> t.user_id == id end)
+  end
+  
+  def get_unassigned_tasks() do
+    tasks = Repo.all(Task)
+    Enum.filter(tasks, fn t -> t.user_id == nil end)
+  end
 
   @doc """
   Creates a task.

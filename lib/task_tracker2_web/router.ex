@@ -14,6 +14,13 @@ defmodule TaskTracker2Web.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :ajax do
+    plug :accepts, ["json"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug TaskTracker2Web.Plugs.FetchSession # FIXME: "FetchUser"
+  end
+
   scope "/", TaskTracker2Web do
     pipe_through :browser
 
@@ -27,4 +34,9 @@ defmodule TaskTracker2Web.Router do
   # scope "/api", TaskTracker2Web do
   #   pipe_through :api
   # end
+
+  scope "/ajax", TaskTracker2Web do
+    pipe_through :ajax
+    resources "/timeblocks", TimeblockController, except: [:new, :edit]
+  end
 end

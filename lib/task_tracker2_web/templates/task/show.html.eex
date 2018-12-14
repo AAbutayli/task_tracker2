@@ -21,11 +21,56 @@
     <strong>Duration:</strong>
       <%= @task.duration.hour %> hours <%= @task.duration.minute %> mins  
   </li>
-     <li>
-     <strong>Assigned to</strong>
-     <%= @task.user_id %> 
-   </li>
+  
+    <table class="table table-striped">
+    <h4>Timeblocks</h4>
+    <thead>
+      <tr>
+        <th>Start</th>
+        <th>End</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="timeblocks">
+      <%= for timeblock <- @timeblocks do %>
+        <tr>
+          <td><%= timeblock.start %></td>
+          <td><%= timeblock.end %></td>
+          <td>
+            <button
+              data-task-id="<%= timeblock.id %>"
+              class="btn btn-danger delete-button">Delete Task</button>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= if @user do %>
+    <li>
+      <strong>Assigned to:</strong>
+      <%= @user.fname %>
+    </li>
+  <% end %>
+
+
+  <%= if @task.user_id == @current_user.id do %>
+      <strong>Start Task </strong>
+        <p id="start-time"></p>
+              <p id="end-time"></p>
+              <button id="start-button"
+                        data-task-id="<%= @task.id %>"
+                        class="btn btn-info">Start Task</button>
+              <button id="end-button"
+                        data-task-id="<%= @task.id %>"
+                        class="btn btn-secondary" disabled>End Task</button>
+        <% end %>
+
 </ul>
 
 <span><%= link "Edit", to: Routes.task_path(@conn, :edit, @task) %></span>
 <span><%= link "Back", to: Routes.task_path(@conn, :index) %></span>
+
+<script>
+ window.timeblock_path = "<%= Routes.timeblock_path(@conn, :create) %>";
+</script>

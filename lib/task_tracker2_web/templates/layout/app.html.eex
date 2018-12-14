@@ -10,19 +10,18 @@
   <body>
     <div class="container">
       <nav class="navbar navbar-expand-sm navbar-light bg-white">
-        <div class="col-4">
-          <a class="navbar-brand" href="/">Task Tracker</a>
-        </div>
-        <div class="col-4">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/tasks">Tasks</a>
-            </li>
-          </ul>
-        </div>
+          <%= if @current_user do %>
+            <div class="col-4">
+              <a class="navbar-brand" href="/tasks">Task Tracker</a>
+            </div>
+            <div class="col-4">
+              <a class="navbar-brand" href="/users/<%=@current_user.id%>">Your Profile</a>
+            </div>
+          <% else %>
+            <div class="col-4">
+              <a class="navbar-brand" href="/">Task Tracker</a>
+            </div>
+          <% end %>
 
         <div class="col-4">
           <%= if @current_user do %>

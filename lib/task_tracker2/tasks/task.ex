@@ -9,6 +9,7 @@ defmodule TaskTracker2.Tasks.Task do
     field :duration, :time
     field :name, :string
     belongs_to :user, TaskTracker2.Users.User
+    has_one :timeblock, TaskTracker2.Timeblocks.Timeblock
     timestamps()
   end
 
@@ -18,6 +19,6 @@ defmodule TaskTracker2.Tasks.Task do
   def changeset(task, attrs) do
     task
     |> cast(attrs, [:name, :desc, :done, :duration, :user_id])
-    |> validate_required([:name, :desc, :done, :duration, :user_id])
+    |> validate_required([:name, :desc])
   end
 end

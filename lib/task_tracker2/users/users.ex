@@ -42,6 +42,19 @@ defmodule TaskTracker2.Users do
   def get_user_by_email(email) do
     Repo.get_by(User, email: email)
   end
+
+  def get_manager(id) do
+    user = Repo.get(User, id)
+    if user.manager_id do
+      Repo.get(User, user.manager_id)
+    end
+  end
+
+  def get_deligateds(id) do
+    user = Repo.get(User, id)
+    users = Repo.all(User)
+    Enum.filter(users, fn u -> u.manager_id == user.id end)
+  end
   @doc """
   Creates a user.
 

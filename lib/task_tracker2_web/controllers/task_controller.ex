@@ -3,19 +3,27 @@ defmodule TaskTracker2Web.TaskController do
 
   alias TaskTracker2.Tasks
   alias TaskTracker2.Tasks.Task
+  alias TaskTracker2.Timeblocks
 
   def index(conn, _params) do
     tasks = Tasks.list_tasks()
-    render(conn, "index.html", tasks: tasks)
+    current_user = get_session(conn, :user_id)
+    user_tasks = Tasks.get_user_tasks(current_user)
+    deligated_tasks = Tasks.get_deligated_tasks(current_user)
+    unassigned_tasks = Tasks.get_unassigned_tasks()
+    render(conn, "index.html", tasks: user_tasks, deligated_tasks: deligated_tasks,  unassigned_tasks: unassigned_tasks)
   end
 
   def new(conn, _params) do
-    changeset = Tasks.change_task(%Task{})
-    users = TaskTracker2.Users.list_users()
+    current_user = get_session(conn, :user_id)
+    changeset = Tasks.change_task(%Task{})   
+    users = TaskTracker2.Users.get_deligateds(current_user) ++ [TaskTracker2.Users.get_user(current_user)]
     render(conn, "new.html", changeset: changeset , users: users)
   end
 
   def create(conn, %{"task" => task_params}) do
+    current_user = get_session(conn, :user_id)
+    users = TaskTracker2.Users.get_deligateds(current_user)
     case Tasks.create_task(task_params) do
       {:ok, task} ->
         conn
@@ -29,18 +37,28 @@ defmodule TaskTracker2Web.TaskController do
 
   def show(conn, %{"id" => id}) do
     task = Tasks.get_task!(id)
-    render(conn, "show.html", task: task)
+    timeblocks = Timeblocks.get_timeblock(task.id)
+    if task.user_id do
+      user = TaskTracker2.Users.get_user!(task.user_id)
+      render(conn, "show.html", task: task, user: user, timeblocks: timeblocks)
+    else
+      user = nil
+      render(conn, "show.html", task: task, user: user, timeblocks: timeblocks)
+    end
   end
 
   def edit(conn, %{"id" => id}) do
     task = Tasks.get_task!(id)
     changeset = Tasks.change_task(task)
-    users= TaskTracker2.Users.list_users()
+    current_user = get_session(conn, :user_id)
+    users = TaskTracker2.Users.get_deligateds(current_user) ++ [TaskTracker2.Users.get_user(current_user)]
     render(conn, "edit.html", task: task, changeset: changeset, users: users)
   end
 
   def update(conn, %{"id" => id, "task" => task_params}) do
     task = Tasks.get_task!(id)
+    current_user = get_session(conn, :user_id)
+    users = TaskTracker2.Users.get_deligateds(current_user) ++ [TaskTracker2.Users.get_user(current_user)]
 
     case Tasks.update_task(task, task_params) do
       {:ok, task} ->
